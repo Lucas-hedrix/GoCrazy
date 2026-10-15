@@ -1,5 +1,6 @@
 import { Query } from "appwrite";
 import { databases, appwriteConfig, isAppwriteConfigured } from "./appwrite";
+import { resolveImages } from "./images";
 
 // Shown while the Appwrite project isn't wired up yet (or if it fails) so the
 // storefront never renders empty.
@@ -55,6 +56,8 @@ export async function getProducts({ category = "all", featured = false, search =
   } else {
     items = DEMO_PRODUCTS;
   }
+
+  items = await resolveImages(items);
 
   let out = items;
   if (featured) out = out.filter((p) => p.featured);
