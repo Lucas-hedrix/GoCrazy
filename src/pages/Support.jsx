@@ -8,7 +8,7 @@ const FAQS = [
   },
   {
     q: "How does shipping work?",
-    a: "Free shipping on orders over $50. Orders are packed and shipped within 2 business days.",
+    a: "Free shipping on orders over ₦100,000. Orders are packed and shipped within 2 business days.",
   },
   {
     q: "Can I return a pre-owned item?",

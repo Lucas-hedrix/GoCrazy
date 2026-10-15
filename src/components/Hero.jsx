@@ -1,9 +1,9 @@
 import { motion } from "motion/react";
-import { ArrowRight, Asterisk, Sparkles } from "lucide-react";
+import { ArrowRight, Asterisk, Flame } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 
 const MARQUEE_ITEMS = [
-  "FREE SHIPPING ON ORDERS OVER $50",
+  "FREE SHIPPING ON ORDERS OVER ₦100,000",
   "NEW DROPS EVERY WEEK",
   "PRE-OWNED & RENTAL-EXCLUSIVE PIECES",
   "SHIRTS & PANTS PRICED TO MOVE",
@@ -66,15 +66,17 @@ export default function Hero() {
           <div className="pointer-events-none absolute -bottom-24 -left-16 h-64 w-64 rounded-full bg-brand/15 blur-3xl" />
           <div>
             <span className="inline-flex items-center gap-1.5 rounded-full border border-brand/40 bg-brand/10 px-3 py-1 text-[10px] font-extrabold uppercase tracking-[0.2em] text-brand">
-              <Sparkles className="h-3.5 w-3.5" />
-              Limited Time
+              <Flame className="h-3.5 w-3.5" />
+              Limited Stock
             </span>
-            <h2 className="mt-6 font-display text-3xl tracking-wide">FLASH SALE</h2>
-            <p className="mt-2 font-display text-6xl leading-none text-brand">
-              70%<span className="text-cream"> OFF</span>
+            <h2 className="mt-6 font-display text-3xl tracking-wide">LAST PAIRS</h2>
+            <p className="mt-2 font-display text-5xl leading-[0.95] text-cream">
+              ALMOST
+              <br />
+              <span className="text-brand">SOLD OUT</span>
             </p>
             <p className="mt-4 text-sm text-muted">
-              On select rental-exclusive shirts &amp; pants.
+              Our pants are moving fast — only a few sizes left, then they&apos;re gone.
             </p>
           </div>
           <motion.button

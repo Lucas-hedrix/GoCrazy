@@ -35,9 +35,17 @@ function normalize(doc) {
   };
 }
 
-// Interim catalog built straight from Storage bucket files, used while the
-// products collection doesn't exist (or is empty). Prices are placeholders.
-const PLACEHOLDER_PRICES = { shirt: 49.99, pant: 59.99 };
+// Real prices from Lucas (NGN), keyed by normalized bucket file name.
+// New uploads without an entry fall back to the placeholder prices.
+const BUCKET_PRICES = {
+  "pain capsule shirt": 170000,
+  "pain capsule shirt 2": 170000,
+  "pain capsule shirt 3": 170000,
+  "summer shirt 1": 220000,
+  "summer shirt 2": 220000,
+  "pain capsule jean": 200000,
+};
+const FALLBACK_PRICES = { shirt: 49999, pant: 59999 };
 
 function productFromFile(file) {
   const isPant = /(jean|pant|trouser|denim|cargo|chino)/.test(file.key);
@@ -50,7 +58,7 @@ function productFromFile(file) {
       .replace(/\b\w/g, (c) => c.toUpperCase()),
     brand: "Go Crazy Deals",
     category,
-    price: PLACEHOLDER_PRICES[category],
+    price: BUCKET_PRICES[file.key] ?? FALLBACK_PRICES[category],
     salePrice: null,
     image: file.url,
     sizes: isPant ? ["28", "30", "32", "34", "36"] : ["S", "M", "L", "XL"],

@@ -4,8 +4,8 @@ const CartContext = createContext(null);
 export const useCart = () => useContext(CartContext);
 
 const STORAGE_KEY = "gocrazydeals.cart.v1";
-const FREE_SHIPPING_THRESHOLD = 50;
-const SHIPPING_FLAT = 6.99;
+const FREE_SHIPPING_THRESHOLD = 100000;
+const SHIPPING_FLAT = 3500;
 
 function load() {
   try {
