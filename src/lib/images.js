@@ -28,6 +28,7 @@ export async function getBucketFiles(force = false) {
     }
     bucketFiles = all.map((f) => ({
       id: f.$id,
+      name: f.name,
       key: norm(f.name),
       url: String(storage.getFileView(appwriteConfig.bucketId, f.$id)),
     }));

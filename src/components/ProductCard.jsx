@@ -13,6 +13,8 @@ export default function ProductCard({ product, index = 0 }) {
   const sizes = product.sizes ?? ["M"];
   const [size, setSize] = useState(sizes.includes("M") ? "M" : sizes[0]);
   const [added, setAdded] = useState(false);
+  const [imageFailed, setImageFailed] = useState(false);
+  const showImage = product.image && !imageFailed;
 
   const handleAdd = () => {
     addItem(product, size);
@@ -38,11 +40,12 @@ export default function ProductCard({ product, index = 0 }) {
       className="group rounded-3xl border border-line bg-card p-3 transition-colors hover:border-brand/40"
     >
       <div className="relative aspect-[4/5] overflow-hidden rounded-2xl bg-card-2">
-        {product.image ? (
+        {showImage ? (
           <img
             src={product.image}
             alt={product.name}
             loading="lazy"
+            onError={() => setImageFailed(true)}
             className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
           />
         ) : (

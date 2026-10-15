@@ -1,6 +1,5 @@
-import { Query } from "appwrite";
 import { databases, appwriteConfig, isAppwriteConfigured } from "./appwrite";
-import { resolveImages } from "./images";
+import { resolveImages, getBucketFiles } from "./images";
 
 // Shown while the Appwrite project isn't wired up yet (or if it fails) so the
 // storefront never renders empty.
@@ -36,26 +35,54 @@ function normalize(doc) {
   };
 }
 
+// Interim catalog built straight from Storage bucket files, used while the
+// products collection doesn't exist (or is empty). Prices are placeholders.
+const PLACEHOLDER_PRICES = { shirt: 49.99, pant: 59.99 };
+
+function productFromFile(file) {
+  const isPant = /(jean|pant|trouser|denim|cargo|chino)/.test(file.key);
+  const category = isPant ? "pant" : "shirt";
+  return {
+    id: `bucket-${file.id}`,
+    name: file.name
+      .replace(/\.[^.]+$/, "")
+      .replace(/[-_]+/g, " ")
+      .replace(/\b\w/g, (c) => c.toUpperCase()),
+    brand: "Go Crazy Deals",
+    category,
+    price: PLACEHOLDER_PRICES[category],
+    salePrice: null,
+    image: file.url,
+    sizes: isPant ? ["28", "30", "32", "34", "36"] : ["S", "M", "L", "XL"],
+    rating: 4.8,
+    featured: true,
+  };
+}
+
+export async function getBucketProducts() {
+  const files = await getBucketFiles();
+  return files.map(productFromFile);
+}
+
 export async function getProducts({ category = "all", featured = false, search = "" } = {}) {
-  let items;
+  let items = null;
 
   if (isAppwriteConfigured && appwriteConfig.databaseId && appwriteConfig.productsCollectionId) {
     try {
       const queries = [];
-      if (featured) queries.push(Query.equal("featured", true));
       const res = await databases.listDocuments(
         appwriteConfig.databaseId,
         appwriteConfig.productsCollectionId,
         queries
       );
-      items = res.documents.map(normalize);
+      if (res.total > 0) items = res.documents.map(normalize);
     } catch (err) {
-      console.warn("Appwrite fetch failed, falling back to demo products:", err?.message);
-      items = DEMO_PRODUCTS;
+      console.warn("Products collection unavailable:", err?.message);
     }
-  } else {
-    items = DEMO_PRODUCTS;
   }
+
+  if (items === null) items = await getBucketProducts();
+  if (items.length === 0) items = DEMO_PRODUCTS;
 
   items = await resolveImages(items);
 

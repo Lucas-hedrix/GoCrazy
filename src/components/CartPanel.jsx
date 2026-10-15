@@ -17,6 +17,24 @@ import { databases, appwriteConfig, isAppwriteConfigured } from "../lib/appwrite
 import { fmt } from "../lib/format";
 import PlaceholderImage from "./PlaceholderImage";
 
+function CartThumb({ item }) {
+  const [failed, setFailed] = useState(false);
+  return (
+    <div className="h-20 w-20 shrink-0 overflow-hidden rounded-xl bg-card-2">
+      {item.image && !failed ? (
+        <img
+          src={item.image}
+          alt={item.name}
+          onError={() => setFailed(true)}
+          className="h-full w-full object-cover"
+        />
+      ) : (
+        <PlaceholderImage category={item.category} />
+      )}
+    </div>
+  );
+}
+
 function CartContent({ headerAction }) {
   const { items, subtotal, shipping, total, setQty, removeItem, clear } = useCart();
   const { user } = useAuth();
@@ -158,13 +176,7 @@ function CartContent({ headerAction }) {
                   className="rounded-2xl border border-line bg-card p-3"
                 >
                   <div className="flex gap-3">
-                    <div className="h-20 w-20 shrink-0 overflow-hidden rounded-xl bg-card-2">
-                      {item.image ? (
-                        <img src={item.image} alt={item.name} className="h-full w-full object-cover" />
-                      ) : (
-                        <PlaceholderImage category={item.category} />
-                      )}
-                    </div>
+                    <CartThumb item={item} />
                     <div className="min-w-0 flex-1">
                       <div className="flex items-start justify-between gap-2">
                         <h4 className="line-clamp-2 text-sm font-bold leading-snug">{item.name}</h4>
