@@ -8,6 +8,7 @@ import Dashboard from "./pages/Dashboard";
 import Collection from "./pages/Collection";
 import Support from "./pages/Support";
 import Auth from "./pages/Auth";
+import Terms from "./pages/Terms";
 
 export default function App() {
   return (
@@ -21,6 +22,7 @@ export default function App() {
                   <Route index element={<Dashboard />} />
                   <Route path="collection" element={<Collection />} />
                   <Route path="support" element={<Support />} />
+                  <Route path="terms" element={<Terms />} />
                 </Route>
                 <Route path="/auth" element={<Auth />} />
               </Routes>

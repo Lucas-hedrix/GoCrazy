@@ -1,4 +1,4 @@
-import { Outlet } from "react-router-dom";
+import { Link, Outlet } from "react-router-dom";
 import Sidebar from "./Sidebar";
 import TopBar from "./TopBar";
 import CartPanel from "./CartPanel";
@@ -14,7 +14,13 @@ export default function Shell() {
             <main className="min-w-0 flex-1 px-4 pb-16 pt-8 sm:px-6 lg:px-10">
               <Outlet />
               <footer className="mt-20 flex flex-wrap items-center justify-between gap-2 border-t border-line pt-6 text-xs text-muted">
-                <span>© 2026 Go Crazy Deals. All rights reserved.</span>
+                <span className="flex items-center gap-3">
+                  <span>© 2026 Go Crazy Deals. All rights reserved.</span>
+                  <span aria-hidden="true">·</span>
+                  <Link to="/terms" className="transition-colors hover:text-cream">
+                    Terms &amp; Conditions
+                  </Link>
+                </span>
                 <span className="font-display tracking-[0.25em] text-cream/30">
                   SHOP AFFORDABLE — GO CRAZY
                 </span>
