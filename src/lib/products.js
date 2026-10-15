@@ -55,6 +55,7 @@ function productFromFile(file) {
     name: file.name
       .replace(/\.[^.]+$/, "")
       .replace(/[-_]+/g, " ")
+      .replace(/\s+\d+$/, "")
       .replace(/\b\w/g, (c) => c.toUpperCase()),
     brand: "Go Crazy Deals",
     category,
