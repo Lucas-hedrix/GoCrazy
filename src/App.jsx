@@ -9,6 +9,11 @@ import Collection from "./pages/Collection";
 import Support from "./pages/Support";
 import Auth from "./pages/Auth";
 import Terms from "./pages/Terms";
+import Checkout from "./pages/Checkout";
+import AdminLayout from "./pages/admin/AdminLayout";
+import AdminOverview from "./pages/admin/AdminOverview";
+import AdminProducts from "./pages/admin/AdminProducts";
+import AdminOrders from "./pages/admin/AdminOrders";
 
 export default function App() {
   return (
@@ -23,8 +28,14 @@ export default function App() {
                   <Route path="collection" element={<Collection />} />
                   <Route path="support" element={<Support />} />
                   <Route path="terms" element={<Terms />} />
+                  <Route path="checkout" element={<Checkout />} />
                 </Route>
                 <Route path="/auth" element={<Auth />} />
+                <Route path="/admin" element={<AdminLayout />}>
+                  <Route index element={<AdminOverview />} />
+                  <Route path="products" element={<AdminProducts />} />
+                  <Route path="orders" element={<AdminOrders />} />
+                </Route>
               </Routes>
             </CartProvider>
           </UIProvider>

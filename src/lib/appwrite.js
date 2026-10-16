@@ -8,6 +8,7 @@ export const appwriteConfig = {
   productsCollectionId: import.meta.env.VITE_APPWRITE_PRODUCTS_COLLECTION_ID ?? "",
   ordersCollectionId: import.meta.env.VITE_APPWRITE_ORDERS_COLLECTION_ID ?? "",
   bucketId: import.meta.env.VITE_APPWRITE_BUCKET_ID ?? "",
+  evidenceBucketId: import.meta.env.VITE_APPWRITE_EVIDENCE_BUCKET_ID ?? "",
 };
 
 export const isAppwriteConfigured = Boolean(endpoint && projectId);

@@ -1,8 +1,6 @@
 import { useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
-import { ID, Permission, Role } from "appwrite";
 import {
-  CheckCircle2,
   ChevronLeft,
   Minus,
   Plus,
@@ -13,7 +11,6 @@ import { useNavigate } from "react-router-dom";
 import { useCart } from "../context/CartContext";
 import { useAuth } from "../context/AuthContext";
 import { useToast } from "../context/ToastContext";
-import { databases, appwriteConfig, isAppwriteConfigured } from "../lib/appwrite";
 import { fmt } from "../lib/format";
 import PlaceholderImage from "./PlaceholderImage";
 
@@ -36,15 +33,13 @@ function CartThumb({ item }) {
 }
 
 function CartContent({ headerAction }) {
-  const { items, subtotal, shipping, total, setQty, removeItem, clear } = useCart();
+  const { items, subtotal, shipping, total, setQty, removeItem, closeCart } = useCart();
   const { user } = useAuth();
   const { push } = useToast();
   const navigate = useNavigate();
-  const [placing, setPlacing] = useState(false);
-  const [orderId, setOrderId] = useState(null);
 
-  async function handleCheckout() {
-    if (items.length === 0 || placing) return;
+  function handleCheckout() {
+    if (items.length === 0) return;
     if (!user) {
       push({
         title: "Sign in to checkout",
@@ -54,74 +49,8 @@ function CartContent({ headerAction }) {
       navigate("/auth");
       return;
     }
-
-    setPlacing(true);
-    try {
-      if (
-        isAppwriteConfigured &&
-        appwriteConfig.databaseId &&
-        appwriteConfig.ordersCollectionId
-      ) {
-        const doc = await databases.createDocument(
-          appwriteConfig.databaseId,
-          appwriteConfig.ordersCollectionId,
-          ID.unique(),
-          {
-            userId: user.$id,
-            userEmail: user.email,
-            items: JSON.stringify(
-              items.map(({ productId, name, size, qty, price }) => ({
-                productId,
-                name,
-                size,
-                qty,
-                price,
-              }))
-            ),
-            subtotal,
-            shipping,
-            total,
-            status: "pending",
-          },
-          [Permission.read(Role.user(user.$id))]
-        );
-        setOrderId(doc.$id);
-      } else {
-        // Demo mode — no Appwrite project wired up yet.
-        setOrderId(`GCD-${Date.now().toString().slice(-8)}`);
-      }
-      clear();
-    } catch (err) {
-      push({ title: "Checkout failed", message: err?.message ?? "Something went wrong.", tone: "error" });
-    } finally {
-      setPlacing(false);
-    }
-  }
-
-  if (orderId) {
-    return (
-      <div className="flex flex-1 flex-col items-center justify-center gap-4 p-8 text-center">
-        <motion.div
-          initial={{ scale: 0.5, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          transition={{ type: "spring", stiffness: 300, damping: 20 }}
-          className="grid h-20 w-20 place-items-center rounded-full bg-brand/15 text-brand"
-        >
-          <CheckCircle2 className="h-10 w-10" />
-        </motion.div>
-        <h3 className="font-display text-2xl tracking-wide">ORDER PLACED!</h3>
-        <p className="text-sm leading-relaxed text-muted">
-          Order <span className="font-bold text-cream">{orderId}</span> is in. We&apos;ll reach
-          out with shipping and pickup details.
-        </p>
-        <button
-          onClick={() => setOrderId(null)}
-          className="mt-2 rounded-full bg-brand px-6 py-2.5 text-sm font-bold text-white transition-colors hover:bg-brand-strong"
-        >
-          Keep Shopping
-        </button>
-      </div>
-    );
+    closeCart();
+    navigate("/checkout");
   }
 
   return (
@@ -239,11 +168,10 @@ function CartContent({ headerAction }) {
             </dl>
             <motion.button
               whileTap={{ scale: 0.98 }}
-              disabled={placing}
               onClick={handleCheckout}
-              className="mt-4 w-full rounded-2xl bg-brand py-4 text-lg font-bold text-white shadow-xl shadow-brand/25 transition-colors hover:bg-brand-strong disabled:cursor-not-allowed disabled:opacity-60"
+              className="mt-4 w-full rounded-2xl bg-brand py-4 text-lg font-bold text-white shadow-xl shadow-brand/25 transition-colors hover:bg-brand-strong"
             >
-              {placing ? "Placing Order..." : "Checkout"}
+              Checkout
             </motion.button>
           </div>
         </>

@@ -1,11 +1,12 @@
 import { AnimatePresence, motion } from "motion/react";
-import { Home, LifeBuoy, LogOut, ShoppingBag } from "lucide-react";
+import { Home, LayoutDashboard, LifeBuoy, LogOut, ShoppingBag } from "lucide-react";
 import { NavLink, useNavigate } from "react-router-dom";
 import Logo from "./Logo";
 import { useAuth } from "../context/AuthContext";
 import { useCart } from "../context/CartContext";
 import { useUI } from "../context/UIContext";
 import { useToast } from "../context/ToastContext";
+import { isAdmin } from "../pages/admin/AdminLayout";
 
 const NAV_ITEMS = [
   { label: "Dashboard", icon: Home, to: "/" },
@@ -92,7 +93,23 @@ function NavList() {
         })}
       </div>
 
-      <div className="mt-auto">
+      <div className="mt-auto space-y-1">
+        {isAdmin(user) && (
+          <NavLink
+            to="/admin"
+            onClick={closeMobile}
+            className={({ isActive }) =>
+              `flex w-full items-center gap-3 rounded-2xl px-4 py-3 text-sm font-semibold transition-colors ${
+                isActive
+                  ? "bg-brand text-white shadow-lg shadow-brand/25"
+                  : "text-muted hover:bg-card hover:text-cream"
+              }`
+            }
+          >
+            <LayoutDashboard className="h-5 w-5" />
+            Admin Panel
+          </NavLink>
+        )}
         {user ? (
           <button
             onClick={handleLogout}
