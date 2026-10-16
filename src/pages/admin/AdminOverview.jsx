@@ -9,7 +9,7 @@ const PAID_STATUSES = new Set(["paid", "processing", "shipped", "delivered"]);
 
 const STATUS_STYLE = {
   pending:           { bg: "rgba(251,191,36,0.14)",  color: "#fbbf24" },
-  awaiting_approval: { bg: "rgba(251,146,60,0.14)",  color: "#fb923c" },
+  pending_approval: { bg: "rgba(251,146,60,0.14)",  color: "#fb923c" },
   paid:              { bg: "rgba(16,185,129,0.14)",  color: "#10b981" },
   processing:        { bg: "rgba(59,130,246,0.14)",  color: "#3b82f6" },
   shipped:           { bg: "rgba(139,92,246,0.14)",  color: "#8b5cf6" },
@@ -91,7 +91,7 @@ export default function AdminOverview() {
     (s, o) => s + (PAID_STATUSES.has(o.status ?? "pending") ? Number(o.total) || 0 : 0),
     0
   ) ?? 0;
-  const awaiting = orders?.filter((o) => (o.status ?? "pending") === "awaiting_approval").length ?? 0;
+  const awaiting = orders?.filter((o) => (o.status ?? "pending") === "pending_approval").length ?? 0;
 
   return (
     <div>

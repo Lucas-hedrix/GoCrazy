@@ -7,7 +7,7 @@ import { fmt } from "../../lib/format";
 
 const STATUSES = [
   "pending",
-  "awaiting_approval",
+  "pending_approval",
   "paid",
   "processing",
   "shipped",
@@ -18,7 +18,7 @@ const STATUSES = [
 
 const STATUS_STYLE = {
   pending:           { bg: "rgba(251,191,36,0.14)",  color: "#fbbf24" },
-  awaiting_approval: { bg: "rgba(251,146,60,0.14)",  color: "#fb923c" },
+  pending_approval: { bg: "rgba(251,146,60,0.14)",  color: "#fb923c" },
   paid:              { bg: "rgba(16,185,129,0.14)",  color: "#10b981" },
   processing:        { bg: "rgba(59,130,246,0.14)",  color: "#3b82f6" },
   shipped:           { bg: "rgba(139,92,246,0.14)",  color: "#8b5cf6" },
@@ -289,7 +289,7 @@ export default function AdminOrders() {
                     <MethodBadge method={o.method} />
                     <span className="text-sm text-muted">{itemCount(o) ?? "—"}</span>
                     <span className="text-sm font-semibold">{fmt(o.total ?? 0)}</span>
-                    {(o.status ?? "pending") === "awaiting_approval" ? (
+                    {(o.status ?? "pending") === "pending_approval" ? (
                       <ApprovalActions
                         order={o}
                         busy={busyId === o.$id}
@@ -327,7 +327,7 @@ export default function AdminOrders() {
                         </span>
                         <span className="text-sm font-semibold">{fmt(o.total ?? 0)}</span>
                       </div>
-                      {(o.status ?? "pending") === "awaiting_approval" ? (
+                      {(o.status ?? "pending") === "pending_approval" ? (
                         <div className="mt-2">
                           <ApprovalActions
                             order={o}

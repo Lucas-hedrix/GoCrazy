@@ -324,7 +324,7 @@ export default function Checkout() {
           evidencePermissions(user.$id)
         );
         const id = await createOrder({
-          status: "awaiting_approval",
+          status: "pending_approval",
           method: "crypto",
           coin,
           txHash: txHash.trim(),

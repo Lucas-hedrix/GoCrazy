@@ -27,11 +27,6 @@ export function evidenceFileUrl(fileId) {
   return `${import.meta.env.VITE_APPWRITE_ENDPOINT}/storage/buckets/${appwriteConfig.evidenceBucketId}/files/${fileId}/view?project=${import.meta.env.VITE_APPWRITE_PROJECT_ID}`;
 }
 
-export const ADMIN_IDS = (import.meta.env.VITE_ADMIN_USER_IDS ?? "")
-  .split(",")
-  .map((id) => id.trim())
-  .filter(Boolean);
-
 export const paystackPublicKey = import.meta.env.VITE_PAYSTACK_PUBLIC_KEY ?? "";
 export const isPaystackConfigured = Boolean(paystackPublicKey);
 
@@ -55,20 +50,14 @@ export function loadPaystack() {
   return paystackPromise;
 }
 
-// Buyer can always see their order; every admin ID in VITE_ADMIN_USER_IDS can
-// read + update (approve/reject crypto payments) each order.
+// Client requests may only grant permissions to the session user itself, so
+// orders/evidence are created with owner-only access. The "grant-admin-access"
+// Appwrite Function listens for new docs/files and adds admin read (and update
+// on orders) server-side via an API key.
 export function orderPermissions(userId) {
-  const perms = [Permission.read(Role.user(userId))];
-  for (const adminId of ADMIN_IDS) {
-    perms.push(Permission.read(Role.user(adminId)), Permission.update(Role.user(adminId)));
-  }
-  return perms;
+  return [Permission.read(Role.user(userId))];
 }
 
 export function evidencePermissions(userId) {
-  const perms = [Permission.read(Role.user(userId))];
-  for (const adminId of ADMIN_IDS) {
-    perms.push(Permission.read(Role.user(adminId)));
-  }
-  return perms;
+  return [Permission.read(Role.user(userId))];
 }
